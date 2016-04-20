@@ -1,0 +1,14 @@
+#form-necesidad {
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.btn {
+  width: 100%;
+}
+
+.welcome-message {
+  background-color: #424242;
+  color: #ffffff;
+  padding: 20px 0;
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AyudaEcuador | Reporte de necesidades</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="text-center welcome-message">
+      <h1>AyudaEcuador</h1>
+      <p class="lead"><i class="fa fa-info-circle" aria-hidden="true"></i> Utilice este formulario para reportar una necesidad</p>
+    </div>
+    <div class="container">
+      <form id="form-necesidad">
+        <br />
+        <div class="form-group">
+          <label for="campo-mapa">Seleccione ubicación</label>
+          <div id="campo-mapa">
+            <img class="img-responsive" src="images/mapa.png"/>
+          </div>
+        </div>
+        <div class="form-group">
+         <label for="campo-type">Tipo de Necesidad</label>
+         <select class="form-control" id="campo-type">
+           <option value="0">Seleccione un tipo de necesidad</option>
+           <option value="15">Falta de Agua</option>
+           <option value="18">Escasez de Alimentos</option>
+           <option value="19">Falta de Medicinas y Material Médico</option>
+           <option value="24">Refugio</option>
+         </select>
+        </div>
+        <div class="form-group">
+          <label for="campo-description">Descripción</label>
+          <textarea placeholder="Descripción..." required id="campo-description" class="form-control" rows="5"></textarea>
+        </div>
+        <div id="error-message" class="form-group">
+        </div>
+        <button id="submit-button" type="button" class="btn btn-primary btn-lg">Enviar solicitud</button>
+      </form>
+      <p class="lead">Para ver todos los reportes diríjase a este sitio
+        <a href="https://mapa.desastre.ec" target="_blank">mapa.desastre.ec</a>
+      </p>
+      <p class="lead">
+        <a href="https://desastre.ec" target="_blank">desastre.ec</a>
+      </p>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+
+      var alert = '<div id="alert-error" class="alert alert-warning ' +
+                  'alert-dismissable fade in" role="alert">' +
+                  '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                  '<span aria-hidden="true">&times;</span></button>' +
+                  '<i class="fa fa-warning fa-2x"></i> ' +
+                  'Por favor, ingrese todos los valores.' +
+                  '</div>';
+
+      $('#submit-button').click(function() {
+        $("form").validate();
+        var isValidForm=$("form").valid();
+        var description = $('#campo-description').val();
+        var type = $('#campo-type').val();
+        var title = 'Necesidad | ' + $('#campo-type option:selected').text();
+        var formData = {
+          task: "report",
+          location_name: "Calle,Ciudad,Provincia",
+          incident_description: description,
+          incident_category: [type],
+          longitude: "-20.2",
+          incident_title: title,
+          latitude: "42.1",
+        };
+
+        var jsonData = JSON.stringify(formData);
+        if (!!isValidForm && type > 0){
+            $.ajax({
+            type: 'POST',
+            url: 'http://localhost:5000/api/reporte',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            dataType: 'json',
+            success: function(data) {
+              console.log(data);
+            },
+            data: jsonData
+          });
+        } else {
+          $('#error-message').html(alert);
+        }
+      });
+    </script>
+  </body>
+</html>
