@@ -65,7 +65,8 @@
     <script src="js/leaflet.js"></script>
     <script type="text/javascript">
       var myMap = L.map('campo-mapa').setView([-0.57128, -79.13177], 8);
-      var latitud, longitude;
+      var latitude = 0;
+      var longitude = 0;
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(myMap);
@@ -91,6 +92,13 @@
                   '<i class="fa fa-warning fa-2x"></i> ' +
                   'Por favor, ingrese todos los valores.' +
                   '</div>';
+      var sucess_message = '<div id="alert-sucess" class="alert alert-success ' +
+                  'alert-dismissable fade in" role="alert">' +
+                  '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                  '<span aria-hidden="true">&times;</span></button>' +
+                  '<i class="fa fa-check-circle fa-2x"></i> ' +
+                  'Los Datos fueron enviados correctamente.' +
+                  '</div>';
 
       $('#submit-button').click(function() {
         $("form").validate();
@@ -98,6 +106,12 @@
         var description = $('#campo-description').val();
         var type = $('#campo-type').val();
         var title = 'Necesidad | ' + $('#campo-type option:selected').text();
+        console.log(longitude);
+        console.log(latitude);
+
+        if(longitude==0 && latitude==0){
+          isValidForm = false;
+        }
         var formData = {
           task: "report",
           location_name: "Calle,Ciudad,Provincia",
@@ -109,7 +123,8 @@
         };
 
         var jsonData = JSON.stringify(formData);
-        $('#submit-button').attr("disabled", true);
+        $('#submit-button').attr("disabled", false);
+        console.log(isValidForm);
         if (!!isValidForm && type > 0){
             $.ajax({
             type: 'POST',
@@ -120,10 +135,12 @@
             dataType: 'json',
             success: function(data) {
               console.log(data);
-              $('#submit-button').removeAttr("disabled");
+              //$('#submit-button').removeAttr("disabled");
+              $('#submit-button').attr("disabled", true);
             },
             data: jsonData
           });
+          $('#error-message').html(sucess_message);
         } else {
           $('#error-message').html(alert);
         }
