@@ -75,8 +75,9 @@
       function onMapClick(e) {
           popup
               .setLatLng(e.latlng)
-              .setContent("You clicked the map at " + e.latlng.toString())
+              .setContent("Reportar aquí!")
               .openOn(mymap);
+              // e.latlng.toString()
       }
 
       mymap.on('click', onMapClick);
