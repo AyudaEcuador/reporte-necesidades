@@ -8,6 +8,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/custom.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -28,7 +29,6 @@
         <div class="form-group">
           <label for="campo-mapa">Seleccione ubicación</label>
           <div id="campo-mapa">
-            <img class="img-responsive" src="images/mapa.png"/>
           </div>
         </div>
         <div class="form-group">
@@ -62,7 +62,13 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.validate.min.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <script type="text/javascript">
+      var mymap = L.map('campo-mapa').setView([0.3928,-79.8802], 8);
+      L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+        subdomains: ['otile1','otile2','otile3','otile4']
+      }).addTo(mymap);
 
       var alert = '<div id="alert-error" class="alert alert-warning ' +
                   'alert-dismissable fade in" role="alert">' +
@@ -92,7 +98,7 @@
         if (!!isValidForm && type > 0){
             $.ajax({
             type: 'POST',
-            url: 'http://localhost:5000/api/reporte',
+            url: 'https://ushahidi-reporte-simple.herokuapp.com/api/reporte',
             headers: {
               'Content-Type': 'application/json'
             },
