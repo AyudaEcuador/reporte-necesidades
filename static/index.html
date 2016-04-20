@@ -106,8 +106,6 @@
         var description = $('#campo-description').val();
         var type = $('#campo-type').val();
         var title = 'Necesidad | ' + $('#campo-type option:selected').text();
-        console.log(longitude);
-        console.log(latitude);
 
         if(longitude==0 && latitude==0){
           isValidForm = false;
@@ -124,7 +122,6 @@
 
         var jsonData = JSON.stringify(formData);
         $('#submit-button').attr("disabled", false);
-        console.log(isValidForm);
         if (!!isValidForm && type > 0){
             $.ajax({
             type: 'POST',
@@ -135,12 +132,16 @@
             dataType: 'json',
             success: function(data) {
               console.log(data);
-              //$('#submit-button').removeAttr("disabled");
-              $('#submit-button').attr("disabled", true);
+              //$('#submit-button').attr("disabled", true);
             },
             data: jsonData
           });
           $('#error-message').html(sucess_message);
+          $("form").trigger('reset');
+          latitude = 0;
+          longitude = 0;
+          myMap.closePopup();
+          myMap.setView([-0.57128, -79.13177], 8);
         } else {
           $('#error-message').html(alert);
         }
