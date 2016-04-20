@@ -1,13 +1,21 @@
 import requests
 import json
 import time
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask.ext.cors import CORS
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.debug = True
 CORS(app)
+
+@app.route('/<type>/<path:path>')
+def send_static(type, path):
+    return send_from_directory('static/{}'.format(type), path)
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 @app.route('/api/reporte', methods=['POST'])
 def create_report():

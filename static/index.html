@@ -64,23 +64,25 @@
     <script src="js/jquery.validate.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <script type="text/javascript">
-      var mymap = L.map('campo-mapa').setView([0.3928,-79.8802], 8);
-      L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
-        subdomains: ['otile1','otile2','otile3','otile4']
-      }).addTo(mymap);
+      var myMap = L.map('campo-mapa').setView([-0.57128, -79.13177], 8);
+      var latitud, longitude;
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(myMap);
 
       var popup = L.popup();
 
       function onMapClick(e) {
-          popup
-              .setLatLng(e.latlng)
-              .setContent("Reportar aquí!")
-              .openOn(mymap);
-              // e.latlng.toString()
+        popup
+          .setLatLng(e.latlng)
+          .setContent("Reportar aquí!")
+          .openOn(myMap);
+          console.log(e.latlng);
+          latitude = e.latlng.lat;
+          longitude = e.latlng.lng;
       }
 
-      mymap.on('click', onMapClick);
+      myMap.on('click', onMapClick);
 
       var alert = '<div id="alert-error" class="alert alert-warning ' +
                   'alert-dismissable fade in" role="alert">' +
@@ -101,12 +103,13 @@
           location_name: "Calle,Ciudad,Provincia",
           incident_description: description,
           incident_category: [type],
-          longitude: "-20.2",
+          longitude: longitude,
           incident_title: title,
-          latitude: "42.1",
+          latitude: latitude,
         };
 
         var jsonData = JSON.stringify(formData);
+        $('#submit-button').attr("disabled", true);
         if (!!isValidForm && type > 0){
             $.ajax({
             type: 'POST',
@@ -117,6 +120,7 @@
             dataType: 'json',
             success: function(data) {
               console.log(data);
+              $('#submit-button').removeAttr("disabled");
             },
             data: jsonData
           });
