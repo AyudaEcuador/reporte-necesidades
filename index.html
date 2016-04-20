@@ -70,6 +70,17 @@
         subdomains: ['otile1','otile2','otile3','otile4']
       }).addTo(mymap);
 
+      var popup = L.popup();
+
+      function onMapClick(e) {
+          popup
+              .setLatLng(e.latlng)
+              .setContent("You clicked the map at " + e.latlng.toString())
+              .openOn(mymap);
+      }
+
+      mymap.on('click', onMapClick);
+
       var alert = '<div id="alert-error" class="alert alert-warning ' +
                   'alert-dismissable fade in" role="alert">' +
                   '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
